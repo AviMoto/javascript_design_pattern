@@ -56,21 +56,43 @@ var MailBox = (function(){
 		var inbox = document.getElementById("inboxTable");
 		
 		return {
-			setName: function(myName){
+			get name(){
+				return  name;
+			},
+			set name(myName){
 				name = myName;
 			},
-			getName: function(){
-				return name;
+			set email(myEmail){
+				if(myEmail.match(/[a-zA-Z]+[0-9a-zA-Z]+[@]{1}[a-zA-Z]+[.]{1}[a-zA-Z]+$/)){
+					email = myEmail;
+				}
 			},
-			setEmail: function(myEmail){
-				email = myEmail;
+			get email(){
+				return email;
 			},
-			newMessage: function(message){
-				alert("You got new message from" + meeage.sender);
+			newMessage: function( topic, message){
+				alert("You got new message from " + message.sender);
 				
+			},
+			subscription: function(message,func){
+				subscription.push(pubsub.subscribe(message,func));
 			}
 		};
 	}
+	return {
+		getInstance: function(){
+			if(!instance){
+				instance = init();
+			}
+			return instance;
+		}
+	};
 })();
 
-function newMessage()
+myMailBox = MailBox.getInstance();
+myMailBox.name = "Avi Levy";
+var myName = myMailBox.name;
+myMailBox.email = "Avi@admintheweb.com"
+var myEmail = myMailBox.email;
+myMailBox.subscription("newMessage",myMailBox.newMessage);
+pubsub.publish("newMessage",{sender: "kobi@admintheweb.com", title: "I'm testing"});
